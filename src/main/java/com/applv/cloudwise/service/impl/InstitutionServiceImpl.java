@@ -1,6 +1,6 @@
-package com.applv.cloudwise.Service.impl;
+package com.applv.cloudwise.service.impl;
 
-import com.applv.cloudwise.Service.InstitutionService;
+import com.applv.cloudwise.service.InstitutionService;
 import com.applv.cloudwise.dto.InstitutionDto;
 import com.applv.cloudwise.dto.InstitutionTypeDto;
 import com.applv.cloudwise.dto.mapper.Mapper;
@@ -28,7 +28,7 @@ public class InstitutionServiceImpl implements InstitutionService {
 
   @Override
   public List<InstitutionDto> getInstitutions(InstitutionTypeDto type) {
-    return institutionRepo.findAllByInstitutionType(institutionTypeMapper.toEntity(type))
+    return institutionRepo.findAllByType(institutionTypeMapper.toEntity(type))
         .stream()
         .map(institutionMapper::toDto)
         .distinct()

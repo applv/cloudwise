@@ -1,6 +1,6 @@
 package com.applv.cloudwise.controller;
 
-import com.applv.cloudwise.Service.UserService;
+import com.applv.cloudwise.service.UserService;
 import com.applv.cloudwise.dto.ApplicationDto;
 import com.applv.cloudwise.dto.UserDto;
 import java.util.List;
@@ -22,10 +22,16 @@ public class UserController {
 
   private final UserService userService;
 
-  @GetMapping(value = "/applications/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<ApplicationDto> getUserApplication(@PathVariable String name) {
+  @GetMapping(value = "/applications/all/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public List<ApplicationDto> getAllUserApplication(@PathVariable String name) {
     var user = userService.getUser(name);
     return userService.getUserApplications(user);
+  }
+
+  @GetMapping(value = "/applications/school/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public List<ApplicationDto> getUserApplication(@PathVariable String name) {
+    var user = userService.getUser(name);
+    return userService.getUserSchoolApplications(user);
   }
 
   @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

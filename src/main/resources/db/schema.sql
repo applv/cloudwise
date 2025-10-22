@@ -23,7 +23,7 @@ CREATE TABLE application
     institution_id INT REFERENCES institution (id)
 );
 
-CREATE TABLE user
+CREATE TABLE users
 (
     id        INT AUTO_INCREMENT PRIMARY KEY,
     name      VARCHAR(200) NOT NULL UNIQUE,

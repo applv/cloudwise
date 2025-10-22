@@ -1,4 +1,4 @@
-package com.applv.cloudwise.Service;
+package com.applv.cloudwise.service;
 
 import com.applv.cloudwise.dto.InstitutionDto;
 import com.applv.cloudwise.dto.InstitutionTypeDto;

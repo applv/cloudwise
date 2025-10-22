@@ -25,7 +25,7 @@ public class Institution extends BaseEntity {
 
   @ManyToOne
   @JoinColumn(name = TYPE_ID, nullable = false)
-  private InstitutionType institutionType;
+  private InstitutionType type;
 
   @ToString.Exclude
   @OneToMany(mappedBy = "institution")

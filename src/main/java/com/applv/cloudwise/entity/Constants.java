@@ -11,7 +11,7 @@ public interface Constants {
   String URL              = "url";
   String PRIORITY         = "priority";
   String INSTITUTION_TYPE = "institution_type";
-  String USER             = "user";
+  String USER             = "users";
   String INSTITUTION      = "institution";
   String APPLICATION      = "application";
   String SCHOOL           = "school";

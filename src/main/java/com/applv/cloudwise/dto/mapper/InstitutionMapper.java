@@ -23,7 +23,7 @@ public class InstitutionMapper implements Mapper<InstitutionDto, Institution> {
         .builder()
         .id(entity.getId())
         .name(entity.getName())
-        .institutionType(InstitutionTypeMapper.toDto(entity.getInstitutionType()))
+        .type(InstitutionTypeMapper.toDto(entity.getType()))
         .build();
   }
 
@@ -32,7 +32,7 @@ public class InstitutionMapper implements Mapper<InstitutionDto, Institution> {
     var entity = new Institution();
     entity.setId(dto.getId());
     entity.setName(dto.getName());
-    entity.setInstitutionType(InstitutionTypeMapper.toEntity(dto.getInstitutionType()));
+    entity.setType(InstitutionTypeMapper.toEntity(dto.getType()));
 
     return entity;
   }

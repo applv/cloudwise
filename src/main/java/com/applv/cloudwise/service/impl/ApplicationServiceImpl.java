@@ -1,7 +1,7 @@
-package com.applv.cloudwise.Service.impl;
+package com.applv.cloudwise.service.impl;
 
-import com.applv.cloudwise.Service.ApplicationService;
-import com.applv.cloudwise.Service.InstitutionService;
+import com.applv.cloudwise.service.ApplicationService;
+import com.applv.cloudwise.service.InstitutionService;
 import com.applv.cloudwise.dto.ApplicationDto;
 import com.applv.cloudwise.dto.InstitutionDto;
 import com.applv.cloudwise.dto.InstitutionTypeDto;

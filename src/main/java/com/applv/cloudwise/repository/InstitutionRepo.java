@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface InstitutionRepo extends JpaRepository<Institution, Integer> {
 
-  List<Institution> findAllByInstitutionType(InstitutionType institutionType);
+  List<Institution> findAllByType(InstitutionType institutionType);
 }

@@ -19,5 +19,5 @@ public class InstitutionDto {
 
   private String name;
 
-  private InstitutionTypeDto institutionType;
+  private InstitutionTypeDto type;
 }

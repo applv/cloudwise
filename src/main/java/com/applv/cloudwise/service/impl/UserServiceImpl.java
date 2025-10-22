@@ -1,10 +1,10 @@
-package com.applv.cloudwise.Service.impl;
+package com.applv.cloudwise.service.impl;
 
 import static com.applv.cloudwise.entity.Constants.SCHOOL;
 
-import com.applv.cloudwise.Service.ApplicationService;
-import com.applv.cloudwise.Service.InstitutionTypeService;
-import com.applv.cloudwise.Service.UserService;
+import com.applv.cloudwise.service.ApplicationService;
+import com.applv.cloudwise.service.InstitutionTypeService;
+import com.applv.cloudwise.service.UserService;
 import com.applv.cloudwise.dto.ApplicationDto;
 import com.applv.cloudwise.dto.InstitutionTypeDto;
 import com.applv.cloudwise.dto.UserDto;
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserDto getUser(Integer id) {
     return userMapper.toDto(userRepo.findUserById(id)
-        .orElseThrow(() -> new RuntimeException("User with id = \"" + id + "\" not found")));
+        .orElseThrow(() -> new RuntimeException("User with id = " + id + " not found")));
   }
 
   @Transactional(readOnly = true)
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     var user = userMapper.toDto(userRepo.findUserByName(userDto.getName())
         .orElseThrow(() -> new RuntimeException("User with name \"" + userDto.getName() + "\" not found")));
     var schoolId = user.getSchool().getId();
-    var schoolType = user.getSchool().getInstitutionType();
+    var schoolType = user.getSchool().getType();
     var apps = new ArrayList<>(appService.getApplications(schoolType)
                                   .stream()
                                   .filter(app -> app.getInstitution().getId().equals(schoolId))
@@ -83,6 +83,21 @@ public class UserServiceImpl implements UserService {
           .toList());
     }
     return apps;
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public List<ApplicationDto> getUserSchoolApplications(UserDto userDto) {
+
+    var user = userMapper.toDto(userRepo.findUserByName(userDto.getName())
+        .orElseThrow(() -> new RuntimeException("User with name \"" + userDto.getName() + "\" not found")));
+
+    var schoolId = user.getSchool().getId();
+    var schoolType = user.getSchool().getType();
+    return new ArrayList<>(appService.getApplications(schoolType)
+        .stream()
+        .filter(app -> app.getInstitution().getId().equals(schoolId))
+        .toList());
   }
 
   @Transactional
@@ -121,11 +136,11 @@ public class UserServiceImpl implements UserService {
   }
 
   private void validate(UserDto userDto) {
-    if (userDto.getSchool().getInstitutionType().getName().equalsIgnoreCase(SCHOOL)) {
+    if (userDto.getSchool().getType().getName().equalsIgnoreCase(SCHOOL)) {
       throw new RuntimeException(
           String.format("""
               The user must have a link to the institution type: "%s" but has the type "%s".""",
-              SCHOOL, userDto.getSchool().getInstitutionType().getName()));
+              SCHOOL, userDto.getSchool().getType().getName()));
     }
   }
 }

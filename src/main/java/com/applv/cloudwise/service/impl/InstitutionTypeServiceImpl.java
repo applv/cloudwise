@@ -1,6 +1,6 @@
-package com.applv.cloudwise.Service.impl;
+package com.applv.cloudwise.service.impl;
 
-import com.applv.cloudwise.Service.InstitutionTypeService;
+import com.applv.cloudwise.service.InstitutionTypeService;
 import com.applv.cloudwise.dto.InstitutionTypeDto;
 import com.applv.cloudwise.dto.mapper.Mapper;
 import com.applv.cloudwise.entity.InstitutionType;
