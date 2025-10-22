@@ -1,16 +1,20 @@
 package com.applv.cloudwise.Service;
 
-import com.applv.cloudwise.dao.ApplicationDao;
-import com.applv.cloudwise.dao.UserDao;
+import com.applv.cloudwise.dto.ApplicationDto;
+import com.applv.cloudwise.dto.UserDto;
 import java.util.List;
 
 public interface UserService {
 
-  List<ApplicationDao> getApplicationsByUser(UserDao user);
+  List<ApplicationDto> getUserApplications(UserDto user);
 
-  void create(UserDao userDao);
+  UserDto getUser(String name);
 
-  void update(UserDao userDao);
+  UserDto getUser(Integer id);
 
-  void delete(UserDao userDao);
+  UserDto create(UserDto userDto);
+
+  void update(UserDto userDto);
+
+  void delete(UserDto userDto);
 }

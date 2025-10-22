@@ -1,6 +1,6 @@
 package com.applv.cloudwise.entity;
 
-import static com.applv.cloudwise.entity.Constants.INSTITUTION;
+import static com.applv.cloudwise.entity.Constants.SCHOOL_ID;
 import static com.applv.cloudwise.entity.Constants.USER;
 
 import jakarta.persistence.Entity;
@@ -21,6 +21,6 @@ import lombok.ToString;
 public class User extends BaseEntity  {
 
   @ManyToOne
-  @JoinColumn(name = INSTITUTION, nullable = false)
+  @JoinColumn(name = SCHOOL_ID, nullable = false)
   private Institution school;
 }

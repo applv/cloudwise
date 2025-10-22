@@ -2,7 +2,7 @@ package com.applv.cloudwise.entity;
 
 import static com.applv.cloudwise.entity.Constants.APPLICATION;
 import static com.applv.cloudwise.entity.Constants.APP_ID;
-import static com.applv.cloudwise.entity.Constants.INSTITUTION;
+import static com.applv.cloudwise.entity.Constants.INSTITUTION_ID;
 import static com.applv.cloudwise.entity.Constants.NAME;
 import static com.applv.cloudwise.entity.Constants.URL;
 
@@ -34,7 +34,7 @@ public class Application extends BaseEntity {
   private String url;
 
   @ManyToOne
-  @JoinColumn(name = INSTITUTION, nullable = false)
+  @JoinColumn(name = INSTITUTION_ID, nullable = false)
   private Institution institution;
 
 }

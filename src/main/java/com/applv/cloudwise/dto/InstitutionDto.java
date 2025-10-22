@@ -1,6 +1,5 @@
-package com.applv.cloudwise.dao;
+package com.applv.cloudwise.dto;
 
-import com.applv.cloudwise.entity.Institution;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -14,13 +13,11 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class ApplicationDao {
+public class InstitutionDto {
+
+  private Integer id;
 
   private String name;
 
-  private String appId;
-
-  private String url;
-
-  private InstitutionDao institution;
+  private InstitutionTypeDto institutionType;
 }

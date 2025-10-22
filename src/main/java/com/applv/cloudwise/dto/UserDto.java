@@ -1,4 +1,4 @@
-package com.applv.cloudwise.dao;
+package com.applv.cloudwise.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,9 +13,11 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class InstitutionDao {
+public class UserDto {
+
+  private final Integer id;
 
   private String name;
 
-  private InstitutionTypeDao institutionType;
+  private InstitutionDto school;
 }
