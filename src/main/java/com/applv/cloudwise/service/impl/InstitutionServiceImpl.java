@@ -27,6 +27,12 @@ public class InstitutionServiceImpl implements InstitutionService {
   }
 
   @Override
+  public InstitutionDto getInstitution(Integer id) {
+    return institutionRepo.findById(id).map(institutionMapper::toDto)
+        .orElseThrow(() -> new RuntimeException("Institution with id = " + id + " not found"));
+  }
+
+  @Override
   public List<InstitutionDto> getInstitutions(InstitutionTypeDto type) {
     return institutionRepo.findAllByType(institutionTypeMapper.toEntity(type))
         .stream()

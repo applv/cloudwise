@@ -2,7 +2,9 @@ package com.applv.cloudwise.service.impl;
 
 import static com.applv.cloudwise.entity.Constants.SCHOOL;
 
+import com.applv.cloudwise.dto.mapper.InstitutionMapper;
 import com.applv.cloudwise.service.ApplicationService;
+import com.applv.cloudwise.service.InstitutionService;
 import com.applv.cloudwise.service.InstitutionTypeService;
 import com.applv.cloudwise.service.UserService;
 import com.applv.cloudwise.dto.ApplicationDto;
@@ -16,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,18 +27,23 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService {
 
   private final UserRepo userRepo;
+  private final InstitutionService institutionService;
   private final InstitutionTypeService institutionTypeService;
   private final ApplicationService appService;
   private final Mapper<UserDto, User> userMapper;
+  private final InstitutionMapper institutionMapper;
 
   public UserServiceImpl(UserRepo userRepo,
+                        InstitutionService institutionService,
                         InstitutionTypeService institutionTypeService,
                         ApplicationService appService,
-                        @Qualifier("UserMapper") Mapper<UserDto, User> userMapper) {
+                        @Qualifier("UserMapper") Mapper<UserDto, User> userMapper, InstitutionMapper institutionMapper) {
     this.userRepo               = userRepo;
+    this.institutionService = institutionService;
     this.institutionTypeService = institutionTypeService;
     this.userMapper             = userMapper;
     this.appService             = appService;
+    this.institutionMapper = institutionMapper;
   }
 
   @Transactional(readOnly = true)
@@ -103,26 +111,42 @@ public class UserServiceImpl implements UserService {
   @Transactional
   @Override
   public UserDto create(UserDto userDto) {
-    if ((Objects.nonNull(userDto.getId()) && userRepo.findUserById(userDto.getId()).isPresent()) ||
-        userRepo.findUserByName(userDto.getName()).isPresent()) {
-      throw new RuntimeException("A user: " + userDto + " already exists.");
-    }
-    validate(userDto);
 
-    var user = userRepo.save(userMapper.toEntity(userDto));
-    return userMapper.toDto(user);
+    if (Objects.nonNull(userDto.getId()) && userRepo.findUserById(userDto.getId()).isPresent()) {
+      throw new RuntimeException("A user with id = " + userDto.getId() + " already exists.");
+    }
+    if (userRepo.findUserByName(userDto.getName()).isPresent()) {
+      throw new RuntimeException("A user with name = \"" + userDto.getName() + "\" already exists.");
+    }
+
+    validate(userDto);
+    var schoolDto = institutionService.getInstitution(userDto.getSchool().getId());
+    userDto.setSchool(schoolDto);
+
+    var user = userMapper.toEntity(userDto);
+    if(Objects.nonNull(user.getId())) {
+      user.setId(null);
+    }
+
+    var school = institutionMapper.toEntity(schoolDto);
+    user.setSchool(school);
+    var newUser = userRepo.save(user);
+
+    return userMapper.toDto(newUser);
   }
 
   @Transactional
   @Override
   public void update(UserDto userDto) {
-    validate(userDto);
-    var user = userRepo.findUserByName(userDto.getName())
-        .orElseThrow(() -> new RuntimeException("User with name " + userDto.getName() + " not found"));
+    var user = getUserService().getUser(userDto.getId());
     user.setName(userDto.getName());
-    user.setSchool(user.getSchool());
+    if(Objects.nonNull(userDto.getSchool()) && !user.getSchool().getId().equals(userDto.getSchool().getId())) {
+      var school = institutionService.getInstitution(userDto.getSchool().getId());
+      user.setSchool(school);
+    }
+    validate(user);
 
-    userRepo.save(user);
+    userRepo.save(userMapper.toEntity(user));
   }
 
   @Transactional
@@ -135,12 +159,22 @@ public class UserServiceImpl implements UserService {
     }
   }
 
+  @Lookup
+  public UserService getUserService() {
+    return null;
+  }
+
   private void validate(UserDto userDto) {
-    if (userDto.getSchool().getType().getName().equalsIgnoreCase(SCHOOL)) {
-      throw new RuntimeException(
-          String.format("""
-              The user must have a link to the institution type: "%s" but has the type "%s".""",
-              SCHOOL, userDto.getSchool().getType().getName()));
+    if(Objects.isNull(userDto.getName())) {
+      throw new RuntimeException("The user name can't be null.");
+    }
+
+    if(Objects.isNull(userDto.getSchool()) || Objects.isNull(userDto.getSchool().getId())) {
+      throw new RuntimeException("The school value is null or has wrong values.");
+    }
+    var school = institutionService.getInstitution(userDto.getSchool().getId());
+    if (!school.getType().getName().equals(SCHOOL)) {
+      throw new RuntimeException("The school value has wrong type.");
     }
   }
 }

@@ -50,8 +50,8 @@ public class UserController {
   }
 
   @PutMapping
-  public void updateUser(@RequestBody UserDto user) {
-    userService.update(user);
+  public void updateUser(@RequestBody UserDto userDto) {
+    userService.update(userDto);
   }
 
   @DeleteMapping
