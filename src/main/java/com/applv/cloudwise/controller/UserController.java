@@ -28,11 +28,6 @@ public class UserController {
     return userService.getUsers();
   }
 
-  @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public UserDto getUser(@PathVariable Integer id) {
-    return userService.getUser(id);
-  }
-
   @GetMapping("/by-name/{name}")
   public UserDto getUser(@PathVariable String name) {
     return userService.getUser(name);
