@@ -21,16 +21,16 @@ public class ApplicationLibraryControllerJDBCTemplateVersion {
 
   @Tag(name = "User Apps (JdbcTemplate impl)", description = "<i><b>Returns Student associated applications according <br/>to the priority of the institutions that created those applications.</b>")
   @Operation(summary = "Show list of applications")
-  @GetMapping(value = "/all/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<ApplicationDto> getAllUserApplication(@PathVariable String name) {
+  @GetMapping(value = "/all/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public List<ApplicationDto> getAllUserApplication(@PathVariable String username) {
 
-    return applicationLibraryService.getUserApplications(name);
+    return applicationLibraryService.getUserApplications(username);
   }
 
-  @Tag(name = "User School Apps (JdbcTemplate impl)", description = "<i><b>Returns applications created by the school <br/>that is associated with the Student.</b>")
-  @GetMapping(value = "/school/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<ApplicationDto> getUserApplication(@PathVariable String name) {
+  @Tag(name = "User School Apps (JdbcTemplate impl)", description = "<i><b>Returns applications created by the Student associated school.</b>")
+  @GetMapping(value = "/school/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public List<ApplicationDto> getUserApplication(@PathVariable String username) {
 
-    return applicationLibraryService.getUserSchoolApplications(name);
+    return applicationLibraryService.getUserSchoolApplications(username);
   }
 }

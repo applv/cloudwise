@@ -18,17 +18,17 @@ public class ApplicationLibraryControllerHibernateVersion {
 
   private final UserService userService;
 
-  @GetMapping(value = "/all/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
+  @GetMapping(value = "/all/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
   @Tag(name = "User Apps (Hibernate impl)", description = "<i><b>Returns Student associated applications according <br/>to the priority of the institutions that created those applications.</b>")
-  public List<ApplicationDto> getAllUserApplication(@PathVariable String name) {
-    var user = userService.getUser(name);
+  public List<ApplicationDto> getAllUserApplication(@PathVariable String username) {
+    var user = userService.getUser(username);
     return userService.getUserApplications(user);
   }
 
-  @Tag(name = "User School Apps (Hibernate impl)", description = "<i><b>Returns applications created by the school <br/>that is associated with the Student.</b>")
-  @GetMapping(value = "/school/{name}", produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<ApplicationDto> getUserApplication(@PathVariable String name) {
-    var user = userService.getUser(name);
+  @Tag(name = "User School Apps (Hibernate impl)", description = "<i><b>Returns applications created by the Student associated school.</b>")
+  @GetMapping(value = "/school/{username}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public List<ApplicationDto> getUserApplication(@PathVariable String username) {
+    var user = userService.getUser(username);
     return userService.getUserSchoolApplications(user);
   }
 }
