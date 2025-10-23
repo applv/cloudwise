@@ -12,17 +12,17 @@ public record TestData(
 
   public static Stream<TestData> getSchoolTestData() {
     List<Map<String, String>> expectedData1 = new ArrayList<>();
-    expectedData1.add(Map.of("appId", "a1", "appName", "Email",       "url", "www.outlook.com/mail"));
-    expectedData1.add(Map.of("appId", "a2", "appName", "Agenda",      "url", "www.outlook.com/agenda"));
-    expectedData1.add(Map.of("appId", "a6", "appName", "School Site", "url", "www.cloudcollege.com"));
+    expectedData1.add(Map.of("appKey", "a1", "appName", "Email",       "url", "www.outlook.com/mail"));
+    expectedData1.add(Map.of("appKey", "a2", "appName", "Agenda",      "url", "www.outlook.com/agenda"));
+    expectedData1.add(Map.of("appKey", "a6", "appName", "School Site", "url", "www.cloudcollege.com"));
     var p1 = new TestData(1, "John", expectedData1);
 
     List<Map<String, String>> expectedData2 = new ArrayList<>();
-    expectedData2.add(Map.of("appId", "a7", "appName", "School Site", "url", "www.sunschool.com"));
+    expectedData2.add(Map.of("appKey", "a7", "appName", "School Site", "url", "www.sunschool.com"));
     var p2 = new TestData(2, "Mary", expectedData2);
 
     List<Map<String, String>> expectedData3 = new ArrayList<>();
-    expectedData3.add(Map.of("appId", "a5", "appName", "Intranet", "url", "www.educloudwise.com/intranet-rainbow"));
+    expectedData3.add(Map.of("appKey", "a5", "appName", "Intranet", "url", "www.educloudwise.com/intranet-rainbow"));
     var p3 = new TestData(3, "Peter", expectedData3);
 
     return Stream.of(p1, p2, p3);
