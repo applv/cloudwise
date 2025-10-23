@@ -15,6 +15,8 @@ public interface Constants {
   String INSTITUTION      = "institution";
   String APPLICATION      = "application";
   String SCHOOL           = "school";
+  String ORGANIZATION     = "organization";
+  String ROOT             = "root";
 
 
 }

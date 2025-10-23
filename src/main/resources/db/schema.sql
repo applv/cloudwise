@@ -29,10 +29,3 @@ CREATE TABLE users
     name      VARCHAR(200) NOT NULL UNIQUE,
     school_id INT          NOT NULL REFERENCES institution (id)
 );
-
-
-
-
-
-
-
