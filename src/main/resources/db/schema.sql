@@ -9,9 +9,10 @@ CREATE TABLE institution_type
 
 CREATE TABLE institution
 (
-    id      INT AUTO_INCREMENT PRIMARY KEY,
-    name    VARCHAR(200) NOT NULL UNIQUE,
-    type_id INT          NOT NULL REFERENCES institution_type (id)
+    id               INT AUTO_INCREMENT PRIMARY KEY,
+    name             VARCHAR(200) NOT NULL UNIQUE,
+    type_id          INT          NOT NULL REFERENCES institution_type (id),
+    school_parent_id INT REFERENCES institution (id)
 );
 
 CREATE TABLE application

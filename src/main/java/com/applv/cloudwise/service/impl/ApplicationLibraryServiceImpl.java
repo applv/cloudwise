@@ -18,8 +18,4 @@ public class ApplicationLibraryServiceImpl implements ApplicationLibraryService 
     return repository.getUserApplications(userName);
   }
 
-  @Override
-  public List<ApplicationDto> getUserSchoolApplications(String userName) {
-    return repository.getUserSchoolApplications(userName);
-  }
 }

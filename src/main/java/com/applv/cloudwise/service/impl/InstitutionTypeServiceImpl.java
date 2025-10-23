@@ -22,7 +22,13 @@ public class InstitutionTypeServiceImpl implements InstitutionTypeService {
   }
 
   @Override
-  public List<InstitutionTypeDto> getInstitutionType() {
+  public InstitutionTypeDto getInstitutionType(String name) {
+    return institutionTypeRepo.findByName(name)
+        .orElseThrow(() -> new RuntimeException("Institution type with name: " + name + " not found."));
+  }
+
+  @Override
+  public List<InstitutionTypeDto> getInstitutionTypes() {
     return institutionTypeRepo.findAll()
         .stream()
         .map(institutionTypeMapper::toDto)

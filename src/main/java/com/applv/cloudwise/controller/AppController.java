@@ -34,14 +34,14 @@ public class AppController {
   }
 
   @PostMapping
-  public void addApp(@RequestBody ApplicationDto appDto, @RequestParam Integer institutionId) {
+  public ApplicationDto addApp(@RequestBody ApplicationDto appDto, @RequestParam Integer institutionId) {
     appDto.setId(null);
-    appService.createOrUpdateApplication(appDto, institutionId);
+    return appService.createOrUpdateApplication(appDto, institutionId);
   }
 
   @PutMapping
-  public void updateApp(@RequestBody ApplicationDto appDto, @RequestParam Integer institutionId) {
-    appService.createOrUpdateApplication(appDto, institutionId);
+  public ApplicationDto updateApp(@RequestBody ApplicationDto appDto, @RequestParam Integer institutionId) {
+    return appService.createOrUpdateApplication(appDto, institutionId);
   }
 
   @DeleteMapping("/{appId}")

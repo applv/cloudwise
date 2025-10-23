@@ -13,4 +13,6 @@ public interface ApplicationRepo extends JpaRepository<Application, Integer> {
   List<Application> findApplicationsByInstitutionIn(Collection<Institution> institutions);
 
   List<Application> findByAppKeyAndInstitution(String appKey, Institution institution);
+
+  List<Application> findAllByInstitution(Institution institution);
 }

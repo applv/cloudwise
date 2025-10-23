@@ -1,6 +1,7 @@
 package com.applv.cloudwise.entity;
 
 import static com.applv.cloudwise.entity.Constants.INSTITUTION;
+import static com.applv.cloudwise.entity.Constants.SCHOOL_PARENT_ID;
 import static com.applv.cloudwise.entity.Constants.TYPE_ID;
 
 import jakarta.persistence.Entity;
@@ -31,4 +32,11 @@ public class Institution extends BaseEntity {
   @OneToMany(mappedBy = "institution")
   private List<Application> applications = new ArrayList<>();
 
+  @ManyToOne
+  @JoinColumn(name = SCHOOL_PARENT_ID)
+  private Institution schoolParentOrganization;
+
+  @ToString.Exclude
+  @OneToMany(mappedBy = "schoolParentOrganization")
+  private List<Institution> schools = new ArrayList<>();
 }

@@ -20,4 +20,7 @@ public class InstitutionDto {
   private String name;
 
   private InstitutionTypeDto type;
+
+  private InstitutionDto schoolParentOrganization;
+
 }

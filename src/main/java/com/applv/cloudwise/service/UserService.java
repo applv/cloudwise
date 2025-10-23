@@ -1,16 +1,11 @@
 package com.applv.cloudwise.service;
 
-import com.applv.cloudwise.dto.ApplicationDto;
 import com.applv.cloudwise.dto.UserDto;
 import java.util.List;
 
 public interface UserService {
 
   List<UserDto> getUsers();
-
-  List<ApplicationDto> getUserApplications(UserDto user);
-
-  List<ApplicationDto> getUserSchoolApplications(UserDto userDto);
 
   UserDto getUser(String name);
 

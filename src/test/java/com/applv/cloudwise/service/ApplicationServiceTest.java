@@ -3,7 +3,8 @@ package com.applv.cloudwise.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.applv.cloudwise.dto.ApplicationDto;
-import com.applv.cloudwise.repository.ApplicationLibraryRepo;
+import com.applv.cloudwise.dto.InstitutionDto;
+import com.applv.cloudwise.dto.UserDto;
 import java.util.Comparator;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -11,16 +12,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class ApplicationLibraryRepoTest {
+public class ApplicationServiceTest {
 
   @Autowired
-  private ApplicationLibraryRepo repository;
+  private ApplicationService appService;
 
   @Test
-  public void getUserApplications_ReturnExpectedData() {
+  public void getApplications_ReturnExpectedData() {
     var data = TestData.getTestData();
-
-    List<ApplicationDto> apps = repository.getUserApplications(data.userName())
+    var school = InstitutionDto.builder().id(1).build();
+    UserDto userDto = UserDto
+        .builder()
+        .id(data.userId())
+        .name(data.userName())
+        .school(school)
+        .build();
+    List<ApplicationDto> apps = appService.getApplications(userDto)
         .stream()
         .sorted(Comparator.comparingInt(app -> Integer.parseInt(app.getAppKey().replaceAll("[^0123456789]", ""))))
         .toList();

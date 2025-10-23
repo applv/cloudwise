@@ -23,49 +23,52 @@ public class ApplicationLibraryRepoImpl implements ApplicationLibraryRepo {
 
   private final static String USER_APPLICATION_SQL = """
       with   user_data as (
-              select cast(:user_name as varchar(200)) as user_name
-              ),
-          applications as (
-              select type.id       as type_id,
-                     inst.id       as inst_id,
-                     app.id        as app_id,
-                     type.name     as type_name,
-                     inst.name     as institution_name,
-                     app.name      as app_name,
-                     app.app_key    as app_key,
-                     app.url       as url,
-                     type.priority as priority
-                from institution_type type
-                join institution inst on inst.type_id       = type.id
-                join application app  on app.institution_id = inst.id
-               where type.name in (:school, :organisation, :root)
-              ),
-          school as (
-              select *
-                from applications app
-               where type_name = :school
-                 and exists (select 1 from users
-                                     where school_id = app.inst_id
-                                       and users.name = (select user_name from user_data))
-          ),
-           organisation as (
-              select *
-                from applications
-               where type_name = :organisation
-                 and app_key not in (select app_key from school)
-           ),
-           root as (
-              select *
-                from applications
-               where type_name = :root
-                 and app_key not in (select app_key from organisation)
-                 and app_key not in (select app_key from school)
-           )
-        select * from school
+          select cast(:user_name as varchar(200)) as user_name
+      ),
+             applications as (
+                 select type.id               as type_id,
+                        inst.id               as inst_id,
+                        app.id                as app_id,
+                        inst.school_parent_id as school_parent_id,
+                        type.name             as type_name,
+                        inst.name             as institution_name,
+                        app.name              as app_name,
+                        app.app_key           as app_key,
+                        app.url               as url,
+                        type.priority         as priority
+                  from institution_type type
+                  join institution inst on inst.type_id       = type.id
+                  join application app  on app.institution_id = inst.id
+             ),
+             school as (
+                 select *
+                   from applications app
+                  where type_name = :school
+                    and exists (select 1 from users
+                                 where school_id = app.inst_id
+                                   and users.name = (select user_name from user_data))
+             ),
+             organization as (
+                 select *
+                   from applications app
+                  where app.type_name = :organization
+                    and exists(select 1
+                                 from school s
+                                where s.school_parent_id  = app.inst_id)
+                    and app.app_key not in (select app_key from school)
+             ),
+             root as (
+                 select *
+                   from applications
+                  where type_name = :root
+                    and app_key not in (select app_key from organization)
+                    and app_key not in (select app_key from school)
+             )
+          select * from school
       union all
-        select * from organisation
+          select * from organization
       union all
-        select * from root
+          select * from root
       order by app_key
       """;
 
@@ -78,21 +81,8 @@ public class ApplicationLibraryRepoImpl implements ApplicationLibraryRepo {
 
     paramSource.addValue("user_name",    userName,     SqlTypes.VARCHAR);
     paramSource.addValue("school",       SCHOOL,       SqlTypes.VARCHAR);
-    paramSource.addValue("organisation", ORGANIZATION, SqlTypes.VARCHAR);
+    paramSource.addValue("organization", ORGANIZATION, SqlTypes.VARCHAR);
     paramSource.addValue("root",         ROOT,         SqlTypes.VARCHAR);
-
-    return jdbcOperations.query(USER_APPLICATION_SQL, paramSource,new ApplicationRowMapper());
-  }
-
-  @Override
-  public List<ApplicationDto> getUserSchoolApplications(String userName) {
-
-    var paramSource = new MapSqlParameterSource();
-
-    paramSource.addValue("user_name",    userName,      SqlTypes.VARCHAR);
-    paramSource.addValue("school",       SCHOOL,        SqlTypes.VARCHAR);
-    paramSource.addValue("organisation", SqlTypes.NULL, SqlTypes.VARCHAR);
-    paramSource.addValue("root",         SqlTypes.NULL, SqlTypes.VARCHAR);
 
     return jdbcOperations.query(USER_APPLICATION_SQL, paramSource,new ApplicationRowMapper());
   }

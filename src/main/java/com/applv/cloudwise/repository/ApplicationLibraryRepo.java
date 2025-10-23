@@ -7,6 +7,4 @@ public interface ApplicationLibraryRepo {
 
   List<ApplicationDto> getUserApplications(String userName);
 
-  List<ApplicationDto> getUserSchoolApplications(String userName);
-
 }

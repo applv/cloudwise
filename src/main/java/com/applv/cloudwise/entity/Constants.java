@@ -6,6 +6,7 @@ public interface Constants {
   String INSTITUTION_ID   = "institution_id";
   String SCHOOL_ID        = "school_id";
   String TYPE_ID          = "type_id";
+  String SCHOOL_PARENT_ID = "school_parent_id";
   String APP_KEY          = "app_key";
   String NAME             = "name";
   String URL              = "url";

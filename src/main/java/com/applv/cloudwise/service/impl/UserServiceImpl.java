@@ -3,18 +3,12 @@ package com.applv.cloudwise.service.impl;
 import static com.applv.cloudwise.entity.Constants.SCHOOL;
 
 import com.applv.cloudwise.dto.mapper.InstitutionMapper;
-import com.applv.cloudwise.service.ApplicationService;
 import com.applv.cloudwise.service.InstitutionService;
-import com.applv.cloudwise.service.InstitutionTypeService;
 import com.applv.cloudwise.service.UserService;
-import com.applv.cloudwise.dto.ApplicationDto;
-import com.applv.cloudwise.dto.InstitutionTypeDto;
 import com.applv.cloudwise.dto.UserDto;
 import com.applv.cloudwise.dto.mapper.Mapper;
 import com.applv.cloudwise.entity.User;
 import com.applv.cloudwise.repository.UserRepo;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -28,21 +22,15 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepo userRepo;
   private final InstitutionService institutionService;
-  private final InstitutionTypeService institutionTypeService;
-  private final ApplicationService appService;
   private final Mapper<UserDto, User> userMapper;
   private final InstitutionMapper institutionMapper;
 
   public UserServiceImpl(UserRepo userRepo,
                         InstitutionService institutionService,
-                        InstitutionTypeService institutionTypeService,
-                        ApplicationService appService,
                         @Qualifier("UserMapper") Mapper<UserDto, User> userMapper, InstitutionMapper institutionMapper) {
     this.userRepo               = userRepo;
     this.institutionService = institutionService;
-    this.institutionTypeService = institutionTypeService;
     this.userMapper             = userMapper;
-    this.appService             = appService;
     this.institutionMapper = institutionMapper;
   }
 
@@ -66,55 +54,6 @@ public class UserServiceImpl implements UserService {
   public UserDto getUser(Integer id) {
     return userMapper.toDto(userRepo.findUserById(id)
         .orElseThrow(() -> new RuntimeException("User with id = " + id + " not found")));
-  }
-
-  @Transactional(readOnly = true)
-  @Override
-  public List<ApplicationDto> getUserApplications(UserDto userDto) {
-
-    var user = userMapper.toDto(userRepo.findUserByName(userDto.getName())
-        .orElseThrow(() -> new RuntimeException("User with name \"" + userDto.getName() + "\" not found")));
-
-    var schoolId = user.getSchool().getId();
-    var schoolType = user.getSchool().getType();
-    var apps = new ArrayList<>(appService.getApplications(schoolType)
-                                  .stream()
-                                  .filter(app -> app.getInstitution().getId().equals(schoolId))
-                                  .toList());
-    var appKeys = apps.stream()
-                     .map(ApplicationDto::getAppKey)
-                     .collect(Collectors.toCollection(HashSet::new));
-
-    var institutionTypes = institutionTypeService.getInstitutionType()
-        .stream()
-        .filter(type -> !type.getAppPriority().equals(schoolType.getAppPriority()))
-        .sorted()
-        .toList();
-
-    for(InstitutionTypeDto type: institutionTypes) {
-      apps.addAll(
-          appService.getApplications(type)
-          .stream()
-          .filter(app -> !appKeys.contains(app.getAppKey()))
-          .peek(app -> appKeys.add(app.getAppKey()))
-          .toList());
-    }
-    return apps;
-  }
-
-  @Transactional(readOnly = true)
-  @Override
-  public List<ApplicationDto> getUserSchoolApplications(UserDto userDto) {
-
-    var user = userMapper.toDto(userRepo.findUserByName(userDto.getName())
-        .orElseThrow(() -> new RuntimeException("User with name \"" + userDto.getName() + "\" not found")));
-
-    var schoolId = user.getSchool().getId();
-    var schoolType = user.getSchool().getType();
-    return new ArrayList<>(appService.getApplications(schoolType)
-        .stream()
-        .filter(app -> app.getInstitution().getId().equals(schoolId))
-        .toList());
   }
 
   @Transactional
