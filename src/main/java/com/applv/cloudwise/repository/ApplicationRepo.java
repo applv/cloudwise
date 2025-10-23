@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ApplicationRepo extends JpaRepository<Application, Integer> {
 
-  List<Application> findAllByAppId(String appId);
+  List<Application> findAllByAppKey(String appId);
 
   List<Application> findApplicationsByInstitutionIn(Collection<Institution> institutions);
 }

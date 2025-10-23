@@ -3,8 +3,7 @@ package com.applv.cloudwise.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.applv.cloudwise.dto.ApplicationDto;
-import com.applv.cloudwise.dto.InstitutionDto;
-import com.applv.cloudwise.dto.UserDto;
+import com.applv.cloudwise.repository.ApplicationLibraryRepo;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -15,22 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class UserServiceTest {
+public class ApplicationLibraryRepoTest {
+
 
   @Autowired
-  private UserService userService;
+  private ApplicationLibraryRepo repository;
 
   @ParameterizedTest
   @MethodSource("testData")
   public void getUserSchoolApplications_ReturnSchoolRelatedApplications(TestData data) {
-    var school = InstitutionDto.builder().id(1).build();
-    UserDto userDto = UserDto
-        .builder()
-        .id(data.userId())
-        .name(data.userName())
-        .school(school)
-        .build();
-    List<ApplicationDto> apps = userService.getUserSchoolApplications(userDto)
+    List<ApplicationDto> apps = repository.getUserSchoolApplications(data.userName())
         .stream()
         .sorted(Comparator.comparingInt(app -> Integer.parseInt(app.getAppKey().replaceAll("[^0123456789]", ""))))
         .toList();
@@ -49,14 +42,8 @@ public class UserServiceTest {
   @Test
   public void getUserApplications_ReturnExpectedData() {
     var data = TestData.getTestData();
-    var school = InstitutionDto.builder().id(1).build();
-    UserDto userDto = UserDto
-        .builder()
-        .id(data.userId())
-        .name(data.userName())
-        .school(school)
-        .build();
-    List<ApplicationDto> apps = userService.getUserApplications(userDto)
+
+    List<ApplicationDto> apps = repository.getUserApplications(data.userName())
         .stream()
         .sorted(Comparator.comparingInt(app -> Integer.parseInt(app.getAppKey().replaceAll("[^0123456789]", ""))))
         .toList();

@@ -22,7 +22,7 @@ public class ApplicationMapper implements Mapper<ApplicationDto, Application> {
         .builder()
         .id(entity.getId())
         .name(entity.getName())
-        .appId(entity.getAppId())
+        .appKey(entity.getAppKey())
         .url(entity.getUrl())
         .institution(institutionMapper.toDto(entity.getInstitution()))
         .build();
@@ -33,7 +33,7 @@ public class ApplicationMapper implements Mapper<ApplicationDto, Application> {
     var application = new Application();
     application.setId(dto.getId());
     application.setName(dto.getName());
-    application.setAppId(dto.getAppId());
+    application.setAppKey(dto.getAppKey());
     application.setUrl(dto.getUrl());
     application.setInstitution(institutionMapper.toEntity(dto.getInstitution()));
 

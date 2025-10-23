@@ -32,7 +32,7 @@ public class ApplicationLibraryRepoImpl implements ApplicationLibraryRepo {
                      type.name     as type_name,
                      inst.name     as institution_name,
                      app.name      as app_name,
-                     app.app_id    as app_key,
+                     app.app_key    as app_key,
                      app.url       as url,
                      type.priority as priority
                 from institution_type type
@@ -119,7 +119,7 @@ public class ApplicationLibraryRepoImpl implements ApplicationLibraryRepo {
       return ApplicationDto
           .builder()
           .id(rs.getInt("app_id"))
-          .appId(rs.getString("app_key"))
+          .appKey(rs.getString("app_key"))
           .name(rs.getString("app_name"))
           .url(rs.getString("url"))
           .institution(institution)

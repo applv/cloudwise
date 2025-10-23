@@ -1,7 +1,7 @@
 package com.applv.cloudwise.entity;
 
 import static com.applv.cloudwise.entity.Constants.APPLICATION;
-import static com.applv.cloudwise.entity.Constants.APP_ID;
+import static com.applv.cloudwise.entity.Constants.APP_KEY;
 import static com.applv.cloudwise.entity.Constants.INSTITUTION_ID;
 import static com.applv.cloudwise.entity.Constants.NAME;
 import static com.applv.cloudwise.entity.Constants.URL;
@@ -27,8 +27,8 @@ public class Application extends BaseEntity {
   @Column(name = NAME, nullable = false, length = 200)
   private String name;
 
-  @Column(name = APP_ID, nullable = false, length = 200)
-  private String appId;
+  @Column(name = APP_KEY, nullable = false, length = 200)
+  private String appKey;
 
   @Column(name = URL, nullable = false, length = 200)
   private String url;

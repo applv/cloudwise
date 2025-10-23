@@ -11,13 +11,13 @@ select 'Cloud College', (select id from institution_type where name = 'school') 
 select 'Sun School',    (select id from institution_type where name = 'school')       union all
 select 'The Rainbow',   (select id from institution_type where name = 'school');
 
-insert into application(app_id, name, url, institution_id)
+insert into application(app_key, name, url, institution_id)
 select 'a1', 'Gmail',                 'www.gmail.com',                         (select id from institution where name = 'root')          union all
 select 'a2', 'Agenda',                'www.google.com/agenda',                 (select id from institution where name = 'root')          union all
 select 'a3', 'Math4You',              'www.math4you.com',                      (select id from institution where name = 'root')          union all
 select 'a4', 'Biology Naturally',     'www.studyapps.com/biology-naturally',   (select id from institution where name = 'root')          union all
 select 'a2', 'Calendar',              'www.google.com/agenda',                 (select id from institution where name = 'EduCloudwise')  union all
-select 'a5', 'EduCloudwise Intranet', 'www.educloudwise.com/intranet}',        (select id from institution where name = 'EduCloudwise')  union all
+select 'a5', 'EduCloudwise Intranet', 'www.educloudwise.com/intranet',        (select id from institution where name = 'EduCloudwise')  union all
 select 'a1', 'Email',                 'www.outlook.com/mail',                  (select id from institution where name = 'Cloud College') union all
 select 'a2', 'Agenda',                'www.outlook.com/agenda',                (select id from institution where name = 'Cloud College') union all
 select 'a6', 'School Site',           'www.cloudcollege.com',                  (select id from institution where name = 'Cloud College') union all

@@ -66,14 +66,15 @@ public class UserServiceImpl implements UserService {
 
     var user = userMapper.toDto(userRepo.findUserByName(userDto.getName())
         .orElseThrow(() -> new RuntimeException("User with name \"" + userDto.getName() + "\" not found")));
+
     var schoolId = user.getSchool().getId();
     var schoolType = user.getSchool().getType();
     var apps = new ArrayList<>(appService.getApplications(schoolType)
                                   .stream()
                                   .filter(app -> app.getInstitution().getId().equals(schoolId))
                                   .toList());
-    var appIds = apps.stream()
-                     .map(ApplicationDto::getAppId)
+    var appKeys = apps.stream()
+                     .map(ApplicationDto::getAppKey)
                      .collect(Collectors.toCollection(HashSet::new));
 
     var institutionTypes = institutionTypeService.getInstitutionType()
@@ -86,8 +87,8 @@ public class UserServiceImpl implements UserService {
       apps.addAll(
           appService.getApplications(type)
           .stream()
-          .filter(app -> !appIds.contains(app.getAppId()))
-          .peek(app -> appIds.add(app.getAppId()))
+          .filter(app -> !appKeys.contains(app.getAppKey()))
+          .peek(app -> appKeys.add(app.getAppKey()))
           .toList());
     }
     return apps;

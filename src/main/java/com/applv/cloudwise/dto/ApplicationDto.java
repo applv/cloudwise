@@ -19,7 +19,7 @@ public class ApplicationDto {
 
   private String name;
 
-  private String appId;
+  private String appKey;
 
   private String url;
 

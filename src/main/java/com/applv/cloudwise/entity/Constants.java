@@ -3,10 +3,10 @@ package com.applv.cloudwise.entity;
 public interface Constants {
 
   String ID               = "id";
-  String APP_ID           = "app_id";
   String INSTITUTION_ID   = "institution_id";
   String SCHOOL_ID        = "school_id";
   String TYPE_ID          = "type_id";
+  String APP_KEY          = "app_key";
   String NAME             = "name";
   String URL              = "url";
   String PRIORITY         = "priority";
