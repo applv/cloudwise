@@ -10,8 +10,10 @@ import com.applv.cloudwise.entity.Application;
 import com.applv.cloudwise.entity.Institution;
 import com.applv.cloudwise.repository.ApplicationRepo;
 import java.util.List;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ApplicationServiceImpl implements ApplicationService {
@@ -32,6 +34,14 @@ public class ApplicationServiceImpl implements ApplicationService {
   }
 
   @Override
+  public List<ApplicationDto> getApplications() {
+    return applicationRepo.findAll()
+        .stream()
+        .map(applicationMapper::toDto)
+        .toList();
+  }
+
+  @Override
   public ApplicationDto getApplication(Integer id) {
     return applicationRepo.findById(id)
         .map(applicationMapper::toDto)
@@ -39,8 +49,8 @@ public class ApplicationServiceImpl implements ApplicationService {
   }
 
   @Override
-  public List<ApplicationDto> getApplications(String appId) {
-    return applicationRepo.findAllByAppKey(appId)
+  public List<ApplicationDto> getApplications(String appKey) {
+    return applicationRepo.findAllByAppKey(appKey)
         .stream()
         .map(applicationMapper::toDto)
         .toList();
@@ -59,4 +69,51 @@ public class ApplicationServiceImpl implements ApplicationService {
         .map(applicationMapper::toDto)
         .toList();
   }
+
+  @Transactional
+  @Override
+  public ApplicationDto createOrUpdateApplication(ApplicationDto appDto, Integer institutionId) {
+
+    if (Objects.isNull(appDto.getAppKey())) {
+      throw new RuntimeException("appKey is null");
+    }
+    if (Objects.isNull(appDto.getName())) {
+      throw new RuntimeException("name is null");
+    }
+    if (Objects.isNull(appDto.getUrl())) {
+      throw new RuntimeException("url is null");
+    }
+    if (Objects.isNull(institutionId)) {
+      if (Objects.isNull(appDto.getInstitution()) || Objects.isNull(appDto.getInstitution().getId())) {
+        throw new RuntimeException("institution cannot be defined");
+      }
+      institutionId = appDto.getInstitution().getId();
+    }
+
+    var institutionDto = institutionService.getInstitution(institutionId);
+
+    if(!applicationRepo.findByAppKeyAndInstitution(appDto.getAppKey(), institutionMapper.toEntity(institutionDto)).isEmpty()){
+      throw new RuntimeException(String.format(
+          "Application with app_key=%s and created by %s \"%s\" already exists.",
+          appDto.getAppKey(),
+          institutionDto.getType().getName(),
+          institutionDto.getName()));
+    }
+
+    var app = new Application();
+    app.setAppKey(appDto.getAppKey());
+    app.setName(appDto.getName());
+    app.setUrl(appDto.getUrl());
+    app.setInstitution(institutionMapper.toEntity(institutionDto));
+
+    var newApp = applicationRepo.save(app);
+
+    return applicationMapper.toDto(newApp);
+  }
+
+  @Override
+  public void deleteApplication(Integer appId) {
+    applicationRepo.deleteById(appId);
+  }
+
 }
