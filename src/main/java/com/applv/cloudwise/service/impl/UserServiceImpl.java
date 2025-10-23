@@ -46,6 +46,14 @@ public class UserServiceImpl implements UserService {
     this.institutionMapper = institutionMapper;
   }
 
+  @Override
+  public List<UserDto> getUsers() {
+    return userRepo.findAll()
+        .stream()
+        .map(userMapper::toDto)
+        .collect(Collectors.toList());
+  }
+
   @Transactional(readOnly = true)
   @Override
   public UserDto getUser(String name) {

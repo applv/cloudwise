@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class ApplicationLibraryRepoTest {
 
-
   @Autowired
   private ApplicationLibraryRepo repository;
 

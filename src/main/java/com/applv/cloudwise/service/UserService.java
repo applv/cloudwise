@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface UserService {
 
+  List<UserDto> getUsers();
+
   List<ApplicationDto> getUserApplications(UserDto user);
 
   List<ApplicationDto> getUserSchoolApplications(UserDto userDto);
