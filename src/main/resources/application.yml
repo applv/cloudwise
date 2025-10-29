@@ -3,6 +3,7 @@ server:
 spring:
   application:
     name: Cloudwise
+
   datasource:
     url: jdbc:h2:mem:ApplicationsLibrary;NON_KEYWORDS=USER
     driver-class-name: org.h2.Driver
@@ -28,3 +29,5 @@ spring:
 springdoc:
   swagger-ui:
     path: /docs
+web:
+  index-url: /swagger-ui/index.html

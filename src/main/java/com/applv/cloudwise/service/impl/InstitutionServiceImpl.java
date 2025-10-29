@@ -10,6 +10,7 @@ import com.applv.cloudwise.repository.InstitutionRepo;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class InstitutionServiceImpl implements InstitutionService {
@@ -26,12 +27,24 @@ public class InstitutionServiceImpl implements InstitutionService {
     this.institutionMapper = institutionMapper;
   }
 
+  @Transactional(readOnly = true)
+  @Override
+  public List<InstitutionDto> getInstitutions() {
+    return institutionRepo.findAll()
+        .stream()
+        .map(institutionMapper::toDto)
+        .distinct()
+        .toList();
+  }
+
+  @Transactional(readOnly = true)
   @Override
   public InstitutionDto getInstitution(Integer id) {
     return institutionRepo.findById(id).map(institutionMapper::toDto)
         .orElseThrow(() -> new RuntimeException("Institution with id = " + id + " not found"));
   }
 
+  @Transactional(readOnly = true)
   @Override
   public List<InstitutionDto> getInstitutions(InstitutionTypeDto type) {
     return institutionRepo.findAllByType(institutionTypeMapper.toEntity(type))
@@ -39,5 +52,14 @@ public class InstitutionServiceImpl implements InstitutionService {
         .map(institutionMapper::toDto)
         .distinct()
         .toList();
+  }
+
+  @Transactional
+  @Override
+  public InstitutionDto createInstitution(InstitutionDto institutionDto) {
+    var institution = institutionMapper.toEntity(institutionDto);
+    var newInstitution = institutionRepo.save(institution);
+
+    return institutionMapper.toDto(newInstitution);
   }
 }

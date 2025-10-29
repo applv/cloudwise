@@ -14,11 +14,11 @@ public record TestData(
     List<Map<String, String>> expectedData1 = new ArrayList<>();
     expectedData1.add(Map.of("appKey", "a1", "appName", "Email",       "url", "www.outlook.com/mail"));
     expectedData1.add(Map.of("appKey", "a2", "appName", "Agenda",      "url", "www.outlook.com/agenda"));
-    expectedData1.add(Map.of("appKey", "a6", "appName", "School Site", "url", "www.cloudcollege.com"));
+    expectedData1.add(Map.of("appKey", "a6", "appName", "ValidSchoolParentOrganization Site", "url", "www.cloudcollege.com"));
     var p1 = new TestData(1, "John", expectedData1);
 
     List<Map<String, String>> expectedData2 = new ArrayList<>();
-    expectedData2.add(Map.of("appKey", "a7", "appName", "School Site", "url", "www.sunschool.com"));
+    expectedData2.add(Map.of("appKey", "a7", "appName", "ValidSchoolParentOrganization Site", "url", "www.sunschool.com"));
     var p2 = new TestData(2, "Mary", expectedData2);
 
     List<Map<String, String>> expectedData3 = new ArrayList<>();
@@ -35,7 +35,7 @@ public record TestData(
     expectedData.add(Map.of("appKey", "a3", "appName", "Math4You",              "url", "www.math4you.com"));
     expectedData.add(Map.of("appKey", "a4", "appName", "Biology Naturally",     "url", "www.studyapps.com/biology-naturally"));
     expectedData.add(Map.of("appKey", "a5", "appName", "EduCloudwise Intranet", "url", "www.educloudwise.com/intranet"));
-    expectedData.add(Map.of("appKey", "a6", "appName", "School Site",           "url", "www.cloudcollege.com"));
+    expectedData.add(Map.of("appKey", "a6", "appName", "ValidSchoolParentOrganization Site",           "url", "www.cloudcollege.com"));
 
     return new TestData(1, "John", expectedData);
   }

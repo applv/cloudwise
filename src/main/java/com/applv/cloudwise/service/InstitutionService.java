@@ -6,7 +6,12 @@ import java.util.List;
 
 public interface InstitutionService {
 
+  List<InstitutionDto> getInstitutions();
+
   InstitutionDto getInstitution(Integer id);
 
   List<InstitutionDto> getInstitutions(InstitutionTypeDto type);
+
+  InstitutionDto createInstitution(InstitutionDto institutionDto);
+
 }

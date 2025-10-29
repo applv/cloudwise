@@ -14,7 +14,6 @@ public class InstitutionTypeMapper implements Mapper<InstitutionTypeDto, Institu
         .builder()
         .id(entity.getId())
         .name(entity.getName())
-        .appPriority(entity.getAppPriority())
         .build();
   }
 
@@ -23,7 +22,6 @@ public class InstitutionTypeMapper implements Mapper<InstitutionTypeDto, Institu
     var entity = new InstitutionType();
     entity.setId(dto.getId());
     entity.setName(dto.getName());
-    entity.setAppPriority(dto.getAppPriority());
 
     return entity;
   }

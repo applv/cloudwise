@@ -1,13 +1,12 @@
 package com.applv.cloudwise.dto;
 
-import java.util.Comparator;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.lang.NonNull;
 
 @Builder
 @AllArgsConstructor
@@ -15,16 +14,10 @@ import org.springframework.lang.NonNull;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class InstitutionTypeDto  implements Comparable<InstitutionTypeDto> {
+public class InstitutionTypeDto{
 
   private Integer id;
 
+  @NotNull
   private String name;
-
-  private Integer appPriority;
-
-  @Override
-  public int compareTo(@NonNull InstitutionTypeDto o) {
-    return Comparator.comparing(InstitutionTypeDto::getAppPriority).reversed().compare(this, o);
-  }
 }

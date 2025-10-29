@@ -1,5 +1,6 @@
 package com.applv.cloudwise.dto;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -17,11 +18,15 @@ public class ApplicationDto {
 
   private Integer id;
 
+  @NotNull
   private String name;
 
+  @NotNull
   private String appKey;
 
+  @NotNull
   private String url;
 
+  @NotNull
   private InstitutionDto institution;
 }

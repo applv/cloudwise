@@ -23,7 +23,7 @@ public abstract class BaseEntity {
   @Column(name = ID, nullable = false)
   private Integer id;
 
-  @Column(name = NAME, nullable = false, length = 200, unique = true)
+  @Column(name = NAME, nullable = false, length = 200)
   private String name;
 
   @Override

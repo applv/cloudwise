@@ -1,6 +1,5 @@
 package com.applv.cloudwise.repository;
 
-import static com.applv.cloudwise.entity.Constants.ORGANIZATION;
 import static com.applv.cloudwise.entity.Constants.ROOT;
 import static com.applv.cloudwise.entity.Constants.SCHOOL;
 
@@ -22,53 +21,63 @@ import org.springframework.stereotype.Repository;
 public class ApplicationLibraryRepoImpl implements ApplicationLibraryRepo {
 
   private final static String USER_APPLICATION_SQL = """
-      with   user_data as (
-          select cast(:user_name as varchar(200)) as user_name
-      ),
-             applications as (
-                 select type.id               as type_id,
-                        inst.id               as inst_id,
-                        app.id                as app_id,
-                        inst.school_parent_id as school_parent_id,
-                        type.name             as type_name,
-                        inst.name             as institution_name,
+      with school_app as (
+                 select app.id                as app_id,
                         app.name              as app_name,
                         app.app_key           as app_key,
                         app.url               as url,
-                        type.priority         as priority
-                  from institution_type type
-                  join institution inst on inst.type_id       = type.id
-                  join application app  on app.institution_id = inst.id
+                        inst.id               as institution_id,
+                        inst.name             as institution_name,
+                        inst.type_id          as type_id,
+                        type.name             as institution_type,
+                        inst.school_parent_id as parent_organization_id
+                  from users users
+                  join institution inst      on inst.id            = users.school_id
+                  join institution_type type on type.id            = inst.type_id
+                                            and type.name          = :school
+                  join application app       on app.institution_id = inst.id
+                 where users.name = :user_name
              ),
-             school as (
-                 select *
-                   from applications app
-                  where type_name = :school
-                    and exists (select 1 from users
-                                 where school_id = app.inst_id
-                                   and users.name = (select user_name from user_data))
+             organization_app as (
+                 select app.id        as app_id,
+                        app.name      as app_name,
+                        app.app_key   as app_key,
+                        app.url       as url,
+                        inst.id       as institution_id,
+                        inst.name     as institution_name,
+                        inst.type_id  as type_id,
+                        type.name     as institution_type,
+                        null          as parent_organization_id
+                  from institution inst
+                  join institution_type type on type.id            = inst.type_id
+                  join application app       on app.institution_id = inst.id
+                 where inst.id in (select parent_organization_id from school_app)
+                   and app.app_key not in (select app_key from school_app)
              ),
-             organization as (
-                 select *
-                   from applications app
-                  where app.type_name = :organization
-                    and exists(select 1
-                                 from school s
-                                where s.school_parent_id  = app.inst_id)
-                    and app.app_key not in (select app_key from school)
-             ),
-             root as (
-                 select *
-                   from applications
-                  where type_name = :root
-                    and app_key not in (select app_key from organization)
-                    and app_key not in (select app_key from school)
+             root_app as (
+                 select app.id        as app_id,
+                        app.name      as app_name,
+                        app.app_key   as app_key,
+                        app.url       as url,
+                        inst.id       as institution_id,
+                        inst.name     as institution_name,
+                        inst.type_id  as type_id,
+                        type.name     as institution_type,
+                        null          as parent_organization_id
+                  from application app
+                  join institution inst      on inst.id          = app.institution_id
+                  join institution_type type on type.id          = inst.type_id
+                  where app_key not in (select app_key from school_app
+                                         union all
+                                        select app_key from organization_app)
+                    and type.name = :root
+                    and exists(select 1 from school_app limit 1)
              )
-          select * from school
+          select * from school_app
       union all
-          select * from organization
+          select * from organization_app
       union all
-          select * from root
+          select * from root_app
       order by app_key
       """;
 
@@ -81,10 +90,9 @@ public class ApplicationLibraryRepoImpl implements ApplicationLibraryRepo {
 
     paramSource.addValue("user_name",    userName,     SqlTypes.VARCHAR);
     paramSource.addValue("school",       SCHOOL,       SqlTypes.VARCHAR);
-    paramSource.addValue("organization", ORGANIZATION, SqlTypes.VARCHAR);
     paramSource.addValue("root",         ROOT,         SqlTypes.VARCHAR);
 
-    return jdbcOperations.query(USER_APPLICATION_SQL, paramSource,new ApplicationRowMapper());
+    return jdbcOperations.query(USER_APPLICATION_SQL, paramSource, new ApplicationRowMapper());
   }
 
   private static class ApplicationRowMapper implements RowMapper<ApplicationDto> {
@@ -95,13 +103,12 @@ public class ApplicationLibraryRepoImpl implements ApplicationLibraryRepo {
       var type = InstitutionTypeDto
           .builder()
           .id(rs.getInt("type_id"))
-          .name(rs.getString("type_name"))
-          .appPriority(rs.getInt("priority"))
+          .name(rs.getString("institution_type"))
           .build();
 
       var institution = InstitutionDto
           .builder()
-          .id(rs.getInt("inst_id"))
+          .id(rs.getInt("institution_id"))
           .name(rs.getString("institution_name"))
           .type(type)
           .build();

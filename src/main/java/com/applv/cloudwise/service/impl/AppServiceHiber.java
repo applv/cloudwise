@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class ApplicationServiceImpl implements ApplicationService {
+public class AppServiceHiber implements ApplicationService {
 
   private final ApplicationRepo applicationRepo;
   private final InstitutionService institutionService;
@@ -34,12 +34,12 @@ public class ApplicationServiceImpl implements ApplicationService {
   private final Mapper<ApplicationDto, Application> applicationMapper;
   private final Mapper<InstitutionDto, Institution> institutionMapper;
 
-  public ApplicationServiceImpl(ApplicationRepo applicationRepo,
-                                InstitutionService institutionService,
-                                InstitutionTypeService institutionTypeService,
-                                UserService userService,
-                                @Qualifier("ApplicationMapper") Mapper<ApplicationDto, Application> applicationMapper,
-                                @Qualifier("InstitutionMapper") Mapper<InstitutionDto, Institution> institutionMapper) {
+  public AppServiceHiber(ApplicationRepo applicationRepo,
+                         InstitutionService institutionService,
+                         InstitutionTypeService institutionTypeService,
+                         UserService userService,
+                         @Qualifier("ApplicationMapper") Mapper<ApplicationDto, Application> applicationMapper,
+                         @Qualifier("InstitutionMapper") Mapper<InstitutionDto, Institution> institutionMapper) {
     this.applicationRepo    = applicationRepo;
     this.institutionService = institutionService;
     this.institutionTypeService = institutionTypeService;
@@ -90,9 +90,9 @@ public class ApplicationServiceImpl implements ApplicationService {
   @Override
   public List<ApplicationDto> getApplications(UserDto userDto) {
 
-    var user = userService.getUser(userDto.getId());
-    var school = user.getSchool();
-    var apps = new ArrayList<>(getApplicationService().getApplications(school));
+    var user    = userService.getUser(userDto.getId());
+    var school  = user.getSchool();
+    var apps    = new ArrayList<>(getApplicationService().getApplications(school));
     var appKeys = apps.stream()
         .map(ApplicationDto::getAppKey)
         .collect(Collectors.toCollection(HashSet::new));
@@ -115,15 +115,6 @@ public class ApplicationServiceImpl implements ApplicationService {
   @Override
   public ApplicationDto createOrUpdateApplication(ApplicationDto appDto, Integer institutionId) {
 
-    if (Objects.isNull(appDto.getAppKey())) {
-      throw new RuntimeException("appKey is null");
-    }
-    if (Objects.isNull(appDto.getName())) {
-      throw new RuntimeException("name is null");
-    }
-    if (Objects.isNull(appDto.getUrl())) {
-      throw new RuntimeException("url is null");
-    }
     if (Objects.isNull(institutionId)) {
       if (Objects.isNull(appDto.getInstitution()) || Objects.isNull(appDto.getInstitution().getId())) {
         throw new RuntimeException("institution cannot be defined");

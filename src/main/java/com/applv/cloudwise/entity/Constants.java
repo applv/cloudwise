@@ -10,7 +10,6 @@ public interface Constants {
   String APP_KEY          = "app_key";
   String NAME             = "name";
   String URL              = "url";
-  String PRIORITY         = "priority";
   String INSTITUTION_TYPE = "institution_type";
   String USER             = "users";
   String INSTITUTION      = "institution";
