@@ -11,9 +11,8 @@ spring:
     password:
   sql:
     init:
-      mode: always
       schema-locations: classpath:db/schema.sql
-      data-locations: classpath:db/data.sql
+      mode: always
   jpa:
     hibernate:
       ddl-auto: none
@@ -31,3 +30,10 @@ springdoc:
     path: /docs
 web:
   index-url: /swagger-ui/index.html
+
+  config:
+    activate:
+      on-profile: dev
+  sql:
+    init:
+      data-locations: classpath:db/data.sql

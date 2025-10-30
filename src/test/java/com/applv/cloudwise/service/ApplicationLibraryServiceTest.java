@@ -3,24 +3,25 @@ package com.applv.cloudwise.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.applv.cloudwise.dto.ApplicationDto;
-import com.applv.cloudwise.repository.ApplicationLibraryRepo;
 import java.util.Comparator;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
-public class ApplicationLibraryRepoTest {
+public class ApplicationLibraryServiceTest {
 
   @Autowired
-  private ApplicationLibraryRepo repository;
+  private ApplicationLibraryService service;
 
   @Test
+  @Sql(scripts = {"classpath:data-test.sql"})
   public void getUserApplications_ReturnExpectedData() {
     var data = TestData.getTestData();
 
-    List<ApplicationDto> apps = repository.getUserApplications(data.userName())
+    List<ApplicationDto> apps = service.getUserApplications(data.userName())
         .stream()
         .sorted(Comparator.comparingInt(app -> Integer.parseInt(app.getAppKey().replaceAll("[^0123456789]", ""))))
         .toList();

@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest
 public class ApplicationServiceTest {
@@ -18,6 +19,7 @@ public class ApplicationServiceTest {
   private ApplicationService appService;
 
   @Test
+  @Sql(scripts = {"classpath:data-test.sql"})
   public void getApplications_ReturnExpectedData() {
     var data = TestData.getTestData();
     var school = InstitutionDto.builder().id(1).build();
