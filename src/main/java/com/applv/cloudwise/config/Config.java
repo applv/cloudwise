@@ -20,12 +20,16 @@ public class Config {
   @Value("${spring.datasource.username}")
   private String username;
 
+  @Value("${spring.datasource.password}")
+  private String password;
+
   @Bean
   public DataSource dataSource() {
     return DataSourceBuilder.create()
         .driverClassName(driverClassName)
         .url(url)
         .username(username)
+        .password(password)
         .build();
   }
 

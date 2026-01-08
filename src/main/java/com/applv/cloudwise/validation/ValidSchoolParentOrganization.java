@@ -15,8 +15,8 @@ import java.lang.annotation.Target;
 public @interface ValidSchoolParentOrganization {
 
   String message() default """
-      The schoolParentOrganization value is wrong: instance is not a school but has not NULL schoolParentOrganization value"
-      + " or instance is a school but schoolParentOrganization value is NULL or is not an organization
+      The schoolParentOrganization value is wrong: instance is not a school but has not NULL schoolParentOrganization value
+      or instance is a school but schoolParentOrganization value is NULL or is not an organization
       """;
 
   Class<?>[] groups() default {};

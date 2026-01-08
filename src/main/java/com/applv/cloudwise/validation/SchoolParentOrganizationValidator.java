@@ -19,14 +19,15 @@ public class SchoolParentOrganizationValidator implements ConstraintValidator<Va
   @Override
   public boolean isValid(InstitutionDto value, ConstraintValidatorContext context) {
     var parentInstitution = value.getSchoolParentOrganization();
-    Predicate<InstitutionDto> isSchool = institutionDto ->
-        institutionDto.getType().getName().equals(SCHOOL)
-            && Objects.nonNull(parentInstitution)
-            && parentInstitution.getType().getName().equals(ORGANIZATION)
-            && Objects.isNull(parentInstitution.getSchoolParentOrganization());
+    Predicate<InstitutionDto> isSchool =
+        institutionDto -> institutionDto.getType().getName().equals(SCHOOL)
+                        && Objects.nonNull(parentInstitution)
+                        && parentInstitution.getType().getName().equals(ORGANIZATION)
+                        && Objects.isNull(parentInstitution.getSchoolParentOrganization());
 
     Predicate<InstitutionDto> isOrganization =
-        institutionDto -> !institutionDto.getType().getName().equals(SCHOOL) && Objects.isNull(parentInstitution);
+        institutionDto -> !institutionDto.getType().getName().equals(SCHOOL)
+                       && Objects.isNull(parentInstitution);
 
     return isSchool.or(isOrganization).test(value);
   }
